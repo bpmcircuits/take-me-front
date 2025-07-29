@@ -1,6 +1,6 @@
 package com.kodilla.takemefront.service;
 
-import com.kodilla.takemefront.domain.HotelOffer;
+import com.kodilla.takemefront.dto.HotelOffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

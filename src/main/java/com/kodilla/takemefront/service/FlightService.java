@@ -1,8 +1,7 @@
 package com.kodilla.takemefront.service;
 
-import com.kodilla.takemefront.domain.FlightOffer;
+import com.kodilla.takemefront.dto.FlightOffer;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class FlightService {

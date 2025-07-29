@@ -1,4 +1,4 @@
-package com.kodilla.takemefront.domain;
+package com.kodilla.takemefront.dto;
 
 import java.util.Objects;
 

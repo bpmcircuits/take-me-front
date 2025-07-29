@@ -1,7 +1,7 @@
-package com.kodilla.takemefront;
+package com.kodilla.takemefront.view;
 
-import com.kodilla.takemefront.domain.FlightOffer;
-import com.kodilla.takemefront.domain.HotelOffer;
+import com.kodilla.takemefront.dto.FlightOffer;
+import com.kodilla.takemefront.dto.HotelOffer;
 import com.kodilla.takemefront.service.FlightService;
 import com.kodilla.takemefront.service.HotelService;
 import com.vaadin.flow.component.button.Button;
