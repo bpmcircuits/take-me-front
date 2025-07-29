@@ -1,8 +1,8 @@
 package com.kodilla.takemefront.view;
 
-import com.kodilla.takemefront.dto.FlightOffer;
-import com.kodilla.takemefront.dto.HotelOffer;
-import com.kodilla.takemefront.service.FlightService;
+import com.kodilla.takemefront.dto.FlightOfferDTO;
+import com.kodilla.takemefront.dto.HotelOfferDTO;
+import com.kodilla.takemefront.service.FlightOfferService;
 import com.kodilla.takemefront.service.HotelService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -18,12 +18,12 @@ import com.vaadin.flow.router.Route;
 @Route("results")
 public class FlightHotelView extends VerticalLayout {
 
-    private final Grid<FlightOffer> flightGrid = new Grid<>(FlightOffer.class, false);
-    private final Grid<HotelOffer> hotelGrid = new Grid<>(HotelOffer.class, false);
+    private final Grid<FlightOfferDTO> flightGrid = new Grid<>(FlightOfferDTO.class, false);
+    private final Grid<HotelOfferDTO> hotelGrid = new Grid<>(HotelOfferDTO.class, false);
     private final Tabs tabs;
     private final Div content;
 
-    private FlightService flightService = FlightService.getInstance();
+    private FlightOfferService flightOfferService = FlightOfferService.getInstance();
     private HotelService hotelService = HotelService.getInstance();
 
     public FlightHotelView() {
@@ -44,16 +44,16 @@ public class FlightHotelView extends VerticalLayout {
         currencyBox.setItems("USD", "EUR", "PLN");
         currencyBox.setValue("USD");
 
-        flightGrid.addColumn(FlightOffer::getAirline).setHeader("Airline");
-        flightGrid.addColumn(FlightOffer::getDepartureTime).setHeader("Departure Time");
-        flightGrid.addColumn(FlightOffer::getFrom).setHeader("From");
-        flightGrid.addColumn(FlightOffer::getArrivalTime).setHeader("Arrival Time");
-        flightGrid.addColumn(FlightOffer::getTo).setHeader("To");
-        flightGrid.addColumn(FlightOffer::getCost).setHeader("Cost");
+        flightGrid.addColumn(FlightOfferDTO::airline).setHeader("Airline");
+        flightGrid.addColumn(FlightOfferDTO::departureTime).setHeader("Departure Time");
+        flightGrid.addColumn(FlightOfferDTO::from).setHeader("From");
+        flightGrid.addColumn(FlightOfferDTO::arrivalTime).setHeader("Arrival Time");
+        flightGrid.addColumn(FlightOfferDTO::to).setHeader("To");
+        flightGrid.addColumn(FlightOfferDTO::cost).setHeader("Cost");
 
-        hotelGrid.addColumn(HotelOffer::getName).setHeader("Hotel");
-        hotelGrid.addColumn(HotelOffer::getLocation).setHeader("Location");
-        hotelGrid.addColumn(HotelOffer::getCost).setHeader("Cost");
+        hotelGrid.addColumn(HotelOfferDTO::name).setHeader("Hotel");
+        hotelGrid.addColumn(HotelOfferDTO::location).setHeader("Location");
+        hotelGrid.addColumn(HotelOfferDTO::cost).setHeader("Cost");
 
         content = new Div(flightGrid);
         content.setWidthFull();
@@ -86,7 +86,7 @@ public class FlightHotelView extends VerticalLayout {
     }
 
     private void refreshFlightGrid() {
-        flightGrid.setItems(flightService.getAllOffers());
+        flightGrid.setItems(flightOfferService.getAllOffers());
     }
 
     private void refreshHotelGrid() {

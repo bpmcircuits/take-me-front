@@ -1,6 +1,6 @@
 package com.kodilla.takemefront.service;
 
-import com.kodilla.takemefront.dto.HotelOffer;
+import com.kodilla.takemefront.dto.HotelOfferDTO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 public class HotelService {
 
     private static final HotelService INSTANCE = new HotelService();
-    private final List<HotelOffer> offers;
+    private final List<HotelOfferDTO> offers;
 
     private HotelService() {
         this.offers = exampleData();
@@ -18,36 +18,41 @@ public class HotelService {
         return INSTANCE;
     }
 
-    public List<HotelOffer> getAllOffers() {
+    public List<HotelOfferDTO> getAllOffers() {
         return Collections.unmodifiableList(offers);
     }
 
-    private List<HotelOffer> exampleData() {
-        List<HotelOffer> offers = new ArrayList<>();
-        HotelOffer offer1 = new HotelOffer();
-        offer1.setName("Grand Hotel");
-        offer1.setLocation("Kraków");
-        offer1.setCost("500 PLN");
+    private List<HotelOfferDTO> exampleData() {
+        List<HotelOfferDTO> offers = new ArrayList<>();
+        HotelOfferDTO offer1 = new HotelOfferDTO(
+                "Grand Hotel",
+                "Kraków",
+                "500 PLN"
+        );
 
-        HotelOffer offer2 = new HotelOffer();
-        offer2.setName("City Center Inn");
-        offer2.setLocation("Warsaw");
-        offer2.setCost("400 PLN");
+        HotelOfferDTO offer2 = new HotelOfferDTO(
+                "City Center Inn",
+                "Warsaw",
+                "400 PLN"
+        );
 
-        HotelOffer offer3 = new HotelOffer();
-        offer3.setName("Beach Resort");
-        offer3.setLocation("Gdańsk");
-        offer3.setCost("600 PLN");
+        HotelOfferDTO offer3 = new HotelOfferDTO(
+                "Beach Resort",
+                "Gdańsk",
+                "600 PLN"
+        );
 
-        HotelOffer offer4 = new HotelOffer();
-        offer4.setName("Mountain Lodge");
-        offer4.setLocation("Zakopane");
-        offer4.setCost("700 PLN");
+        HotelOfferDTO offer4 = new HotelOfferDTO(
+                "Mountain Lodge",
+                "Zakopane",
+                "700 PLN"
+        );
 
-        HotelOffer offer5 = new HotelOffer();
-        offer5.setName("Luxury Suites");
-        offer5.setLocation("Wrocław");
-        offer5.setCost("800 PLN");
+        HotelOfferDTO offer5 = new HotelOfferDTO(
+                "Luxury Suites",
+                "Wrocław",
+                "800 PLN"
+        );
 
         offers.add(offer1);
         offers.add(offer2);
