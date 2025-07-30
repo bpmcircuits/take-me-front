@@ -9,9 +9,11 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-@Route("search")
+@Route(value = "search", layout = MainLayout.class)
+@PageTitle("Flight Search")
 public class FlightSearchView extends VerticalLayout {
 
     public FlightSearchView() {
@@ -52,21 +54,5 @@ public class FlightSearchView extends VerticalLayout {
         content.getStyle().set("border", "1px solid #aaa").set("padding", "20px");
 
         add(content);
-
-        Button loginButton = new Button("Log In");
-        loginButton.addClickListener(e -> {
-            UI.getCurrent().navigate("/login");
-        });
-
-        Button signupButton = new Button("Sign Up");
-        signupButton.addClickListener(e -> {
-            UI.getCurrent().navigate("/signup");
-        });
-
-        HorizontalLayout topRight = new HorizontalLayout(loginButton, signupButton);
-        topRight.setJustifyContentMode(JustifyContentMode.END);
-        topRight.setWidthFull();
-
-        addComponentAsFirst(topRight);
     }
 }

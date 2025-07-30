@@ -8,14 +8,15 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-@Route("results")
+@Route(value = "results", layout = MainLayout.class)
+@PageTitle("Flight and Hotel Offers")
 public class FlightHotelView extends VerticalLayout {
 
     private final Grid<FlightOfferDTO> flightGrid = new Grid<>(FlightOfferDTO.class, false);
@@ -32,13 +33,6 @@ public class FlightHotelView extends VerticalLayout {
         tabs = new Tabs(flightsTab, hotelsTab);
         tabs.setSelectedTab(flightsTab);
 
-        Button loginButton = new Button("Log In");
-        Button signUpButton = new Button("Sign Up");
-
-        HorizontalLayout topBar = new HorizontalLayout(tabs, new Spacer(), loginButton, signUpButton);
-        topBar.setWidthFull();
-        topBar.setAlignItems(FlexComponent.Alignment.CENTER);
-
         ComboBox<String> currencyBox = new ComboBox<>();
         currencyBox.setLabel("Currency");
         currencyBox.setItems("USD", "EUR", "PLN");
@@ -53,7 +47,7 @@ public class FlightHotelView extends VerticalLayout {
 
         hotelGrid.addColumn(HotelOfferDTO::name).setHeader("Hotel");
         hotelGrid.addColumn(HotelOfferDTO::location).setHeader("Location");
-        hotelGrid.addColumn(HotelOfferDTO::cost).setHeader("Cost");
+        hotelGrid.addColumn(HotelOfferDTO::price).setHeader("Cost");
 
         content = new Div(flightGrid);
         content.setWidthFull();
@@ -73,7 +67,7 @@ public class FlightHotelView extends VerticalLayout {
             }
         });
 
-        add(topBar, content, bottomBar);
+        add(content, bottomBar);
         setSizeFull();
         refreshFlightGrid();
         refreshHotelGrid();

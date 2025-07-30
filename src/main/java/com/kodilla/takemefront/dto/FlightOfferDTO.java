@@ -1,11 +1,11 @@
 package com.kodilla.takemefront.dto;
 
-import java.util.Objects;
+import java.time.LocalDateTime;
 
 public record FlightOfferDTO(String airline,
-                             String departureTime,
+                             LocalDateTime departureTime,
                              String from,
-                             String arrivalTime,
+                             LocalDateTime arrivalTime,
                              String to,
                              String cost) {
 }

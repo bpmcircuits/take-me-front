@@ -7,9 +7,11 @@ import com.kodilla.takemefront.service.OrderService;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-@Route("trip-summary/round-trip")
+@Route(value = "trip-summary/round-trip", layout = MainLayout.class)
+@PageTitle("Round Trip Summary")
 public class RoundTripView extends VerticalLayout {
 
     private OrderService orderService = OrderService.getInstance();

@@ -9,9 +9,11 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-@Route("trip-summary/one-way")
+@Route(value = "trip-summary/one-way", layout = MainLayout.class)
+@PageTitle("One Way Trip Summary")
 public class OneWayTripView extends VerticalLayout {
 
     private OrderService orderService = OrderService.getInstance();

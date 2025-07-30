@@ -1,6 +1,8 @@
 package com.kodilla.takemefront.service;
 
 import com.kodilla.takemefront.dto.FlightOfferDTO;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,45 +26,45 @@ public class FlightOfferService {
         List<FlightOfferDTO> offers = new ArrayList<>();
         FlightOfferDTO offer1 = new FlightOfferDTO(
                 "LOT Polish Airlines",
-                "2024-07-01T10:00",
+                LocalDateTime.of(2025, 8, 1, 8, 0),
                 "Warsaw",
-                "2024-07-01T12:00",
+                LocalDateTime.of(2025, 8, 1, 8, 0),
                 "London",
                 "600 PLN"
         );
 
         FlightOfferDTO offer2 = new FlightOfferDTO(
                 "Lufthansa",
-                "2024-07-02T14:30",
+                LocalDateTime.of(2025, 8, 1, 8, 0),
                 "Kraków",
-                "2024-07-02T16:00",
+                LocalDateTime.of(2025, 8, 1, 8, 0),
                 "Berlin",
                 "450 PLN"
         );
 
         FlightOfferDTO offer3 = new FlightOfferDTO(
                 "Ryanair",
-                "2024-07-03T08:00",
+                LocalDateTime.of(2025, 8, 1, 8, 0),
                 "Gdańsk",
-                "2024-07-03T11:00",
+                LocalDateTime.of(2025, 8, 1, 8, 0),
                 "Barcelona",
                 "350 PLN"
         );
 
         FlightOfferDTO offer4 = new FlightOfferDTO(
                 "Wizz Air",
-                "2024-07-04T09:30",
+                LocalDateTime.of(2025, 8, 1, 8, 0),
                 "Wrocław",
-                "2024-07-04T11:00",
+                LocalDateTime.of(2025, 8, 1, 8, 0),
                 "Budapest",
                 "400 PLN"
         );
 
         FlightOfferDTO offer5 = new FlightOfferDTO(
                 "Air France",
-                "2024-07-05T15:00",
+                LocalDateTime.of(2025, 8, 1, 8, 0),
                 "Poznań",
-                "2024-07-05T17:30",
+                LocalDateTime.of(2025, 8, 1, 8, 0),
                 "Paris",
                 "700 PLN"
         );

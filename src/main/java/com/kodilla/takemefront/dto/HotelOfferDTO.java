@@ -1,4 +1,11 @@
 package com.kodilla.takemefront.dto;
 
-public record HotelOfferDTO(String name, String location, String cost) {
+import java.time.LocalDate;
+
+public record HotelOfferDTO(String name,
+                            String location,
+                            LocalDate startDate,
+                            LocalDate endDate,
+                            int guests,
+                            String price) {
 }
