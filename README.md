@@ -88,11 +88,3 @@ backend.api.endpoint.test=http://localhost:8083/api/v1
 ```bash
 ./gradlew test
 ```
-
-## License
-
-[Add license information here]
-
-## Contributors
-
-[Add contributor information here]
