@@ -1,5 +1,8 @@
 package com.kodilla.tripplannerfront.view;
 
+import com.kodilla.tripplannerfront.dto.SearchRequestDTO;
+import com.kodilla.tripplannerfront.session.SearchCriteriaHolder;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -13,9 +16,9 @@ import com.vaadin.flow.router.Route;
 
 @Route(value = "search", layout = MainLayout.class)
 @PageTitle("Flight Search")
-public class FlightSearchView extends VerticalLayout {
+public class SearchView extends VerticalLayout {
 
-    public FlightSearchView() {
+    public SearchView(SearchCriteriaHolder holder) {
         setSizeFull();
         setAlignItems(Alignment.CENTER);
 
@@ -31,12 +34,19 @@ public class FlightSearchView extends VerticalLayout {
         locationLayout.setPadding(false);
         locationLayout.setSpacing(true);
 
-        ComboBox<String> travelers = new ComboBox<>();
-        travelers.setLabel("Travelers");
-        travelers.setItems("1", "2", "3", "4", "5+");
+        ComboBox<String> adults = new ComboBox<>();
+        adults.setLabel("Adults");
+        adults.setItems("1", "2", "3", "4", "5+");
 
-        Checkbox directFlights = new Checkbox("Direct flights");
-        VerticalLayout filtersLayout = new VerticalLayout(directFlights, travelers);
+        ComboBox<String> child = new ComboBox<>();
+        child.setLabel("Child");
+        child.setItems("0", "1", "2", "3", "4", "5+");
+
+        ComboBox<String> infants = new ComboBox<>();
+        infants.setLabel("Infants");
+        infants.setItems("0", "1", "2", "3", "4", "5+");
+
+        VerticalLayout filtersLayout = new VerticalLayout(adults, child, infants);
         filtersLayout.setPadding(false);
         filtersLayout.setSpacing(true);
 
@@ -45,7 +55,7 @@ public class FlightSearchView extends VerticalLayout {
         formLayout.setDefaultVerticalComponentAlignment(Alignment.END);
 
         Button searchButton = new Button("Search");
-        H1 heading = new H1("Plan your adventure");
+        H1 heading = new H1("Plan your trip");
         VerticalLayout content = new VerticalLayout(heading, formLayout, searchButton);
         content.setAlignItems(Alignment.CENTER);
         content.setPadding(true);
@@ -53,5 +63,21 @@ public class FlightSearchView extends VerticalLayout {
         content.getStyle().set("border", "1px solid #aaa").set("padding", "20px");
 
         add(content);
+
+        searchButton.addClickListener(e -> {
+            SearchRequestDTO dto = new SearchRequestDTO(
+                    fromField.getValue(),
+                    toField.getValue(),
+                    departDate.getValue().toString(),
+                    returnDate.getValue().toString(),
+                    Integer.parseInt(adults.getValue()),
+                    Integer.parseInt(child.getValue()),
+                    Integer.parseInt(infants.getValue()),
+                    "EUR"
+            );
+
+            holder.setLastSearch(dto);
+            UI.getCurrent().navigate("results");
+        });
     }
 }

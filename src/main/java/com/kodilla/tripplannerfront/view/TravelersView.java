@@ -1,9 +1,16 @@
 package com.kodilla.tripplannerfront.view;
 
+import com.kodilla.tripplannerfront.dto.TravelerDTO;
+import com.kodilla.tripplannerfront.mapper.TravelerMapper;
+import com.kodilla.tripplannerfront.service.TravelerService;
+import com.kodilla.tripplannerfront.tripplanerback.client.BackendClient;
+import com.kodilla.tripplannerfront.tripplanerback.dto.travelers.TravelerRequestDTO;
+import com.kodilla.tripplannerfront.tripplanerback.dto.travelers.TravelerResponseDTO;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -17,10 +24,16 @@ import java.util.List;
 @PageTitle("Travelers")
 public class TravelersView extends VerticalLayout {
 
-    private List<Traveler> travelers = new ArrayList<>();
-    private Grid<Traveler> travelerGrid = new Grid<>(Traveler.class);
+    private Grid<TravelerDTO> travelerGrid = new Grid<>(TravelerDTO.class, false);
 
-    public TravelersView() {
+    private final TravelerService travelerService;
+    private final TravelerMapper travelerMapper;
+
+    public TravelersView(TravelerService travelerService, TravelerMapper travelerMapper) {
+        this.travelerService = travelerService;
+        this.travelerMapper = travelerMapper;
+
+
         setWidthFull();
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
 
@@ -34,29 +47,45 @@ public class TravelersView extends VerticalLayout {
 
         ComboBox<String> genderBox = new ComboBox<>();
         genderBox.setPlaceholder("Gender");
-        genderBox.setItems("Male", "Female", "Other");
+        genderBox.setItems("MALE", "FEMALE");
 
         ComboBox<String> personTypeBox = new ComboBox<>();
         personTypeBox.setPlaceholder("Person type");
-        personTypeBox.setItems("Adult", "Child", "Infant");
+        personTypeBox.setItems("ADULT", "CHILD", "INFANT");
 
         ComboBox<String> baggageBox = new ComboBox<>();
         baggageBox.setPlaceholder("Baggage");
-        baggageBox.setItems("None", "Small", "Medium", "Large");
+        baggageBox.setItems("CABIN", "CHECKED");
+
+        HorizontalLayout formLayout = new HorizontalLayout(
+                firstNameField, lastNameField, genderBox, personTypeBox, baggageBox
+        );
+        formLayout.setAlignItems(Alignment.BASELINE);
+
+        travelerGrid.addColumn(TravelerDTO::firstName).setHeader("First Name");
+        travelerGrid.addColumn(TravelerDTO::lastName).setHeader("Last Name");
+        travelerGrid.addColumn(TravelerDTO::gender).setHeader("Gender");
+        travelerGrid.addColumn(TravelerDTO::personType).setHeader("Person");
+        travelerGrid.addColumn(TravelerDTO::baggageType).setHeader("Baggage");
+
+        travelerGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+
+        reload();
 
         Button addButton = new Button("Add traveler");
         addButton.addClickListener(e -> {
-            Traveler traveler = new Traveler(
+            TravelerDTO formTraveler = new TravelerDTO(
+                    null,
                     firstNameField.getValue(),
                     lastNameField.getValue(),
                     genderBox.getValue(),
                     personTypeBox.getValue(),
                     baggageBox.getValue()
             );
-            travelers.add(traveler);
-            travelerGrid.setItems(travelers);
 
-            // Wyczyść pola
+            travelerService.addTraveler(travelerMapper.mapToRequest(formTraveler));
+            reload();
+
             firstNameField.clear();
             lastNameField.clear();
             genderBox.clear();
@@ -64,54 +93,21 @@ public class TravelersView extends VerticalLayout {
             baggageBox.clear();
         });
 
-        HorizontalLayout formLayout = new HorizontalLayout(
-                firstNameField, lastNameField, genderBox, personTypeBox, baggageBox
-        );
-        formLayout.setAlignItems(Alignment.BASELINE);
-
-        travelerGrid.setColumns("firstName", "lastName", "gender", "personType", "baggage");
-        travelerGrid.getColumnByKey("firstName").setHeader("FIRST NAME");
-        travelerGrid.getColumnByKey("lastName").setHeader("LAST NAME");
-        travelerGrid.getColumnByKey("gender").setHeader("GENDER");
-        travelerGrid.getColumnByKey("personType").setHeader("PERSON");
-        travelerGrid.getColumnByKey("baggage").setHeader("BAGGAGE");
-
         Button deleteButton = new Button("Delete traveler", event -> {
-            Traveler selected = travelerGrid.asSingleSelect().getValue();
-            if (selected != null) {
-                travelers.remove(selected);
-                travelerGrid.setItems(travelers);
+            TravelerDTO selected = travelerGrid.asSingleSelect().getValue();
+            if (selected != null && selected.id() != null) {
+                travelerService.deleteTraveler(selected.id());
+                reload();
+            } else {
+                Notification.show("Please select a traveler first.");
             }
         });
 
         add(title, formLayout, addButton, travelerGrid, deleteButton);
     }
 
-    public static class Traveler {
-        private String firstName;
-        private String lastName;
-        private String gender;
-        private String personType;
-        private String baggage;
-
-        public Traveler(String firstName, String lastName, String gender, String personType, String baggage) {
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.gender = gender;
-            this.personType = personType;
-            this.baggage = baggage;
-        }
-
-        public String getFirstName() { return firstName; }
-        public String getLastName() { return lastName; }
-        public String getGender() { return gender; }
-        public String getPersonType() { return personType; }
-        public String getBaggage() { return baggage; }
-
-        public void setFirstName(String firstName) { this.firstName = firstName; }
-        public void setLastName(String lastName) { this.lastName = lastName; }
-        public void setGender(String gender) { this.gender = gender; }
-        public void setPersonType(String personType) { this.personType = personType; }
-        public void setBaggage(String baggage) { this.baggage = baggage; }
+    private void reload() {
+        List<TravelerDTO> latest = travelerMapper.mapFromResponseToList(travelerService.getTravelers());
+        travelerGrid.setItems(latest);
     }
 }

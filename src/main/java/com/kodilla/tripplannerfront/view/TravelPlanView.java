@@ -12,10 +12,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-
 @Route(value = "travel-plan", layout = MainLayout.class)
 @PageTitle("Travel Plan")
 public class TravelPlanView extends VerticalLayout {
@@ -37,7 +33,6 @@ public class TravelPlanView extends VerticalLayout {
         flightGrid.addColumn(FlightOfferDTO::arrivalTime).setHeader("ARRIVAL");
         flightGrid.addColumn(FlightOfferDTO::cost).setHeader("PRICE");
 
-        flightGrid.setItems(getSelectedFlight()); // przykładowe dane
         add(flightGrid);
 
         Button changeFlightButton = new Button("Change Flight", e ->
@@ -57,10 +52,9 @@ public class TravelPlanView extends VerticalLayout {
         hotelGrid.addColumn(HotelOfferDTO::location).setHeader("HOTEL");
         hotelGrid.addColumn(HotelOfferDTO::startDate).setHeader("FROM");
         hotelGrid.addColumn(HotelOfferDTO::endDate).setHeader("TO");
-        hotelGrid.addColumn(HotelOfferDTO::guests).setHeader("GUESTS");
+        hotelGrid.addColumn(HotelOfferDTO::reviewScore).setHeader("GUESTS");
         hotelGrid.addColumn(HotelOfferDTO::price).setHeader("PRICE");
 
-        hotelGrid.setItems(getSelectedHotel());
         add(hotelGrid);
 
         Button changeHotelButton = new Button("Change Hotel", e ->
@@ -82,7 +76,6 @@ public class TravelPlanView extends VerticalLayout {
         travelerGrid.addColumn(TravelerDTO::personType).setHeader("PERSON");
         travelerGrid.addColumn(TravelerDTO::baggageType).setHeader("BAGGAGE");
 
-        travelerGrid.setItems(getTravelers());
         add(travelerGrid);
 
         Button changeTravelersButton = new Button("Change Travelers", e ->
@@ -105,36 +98,5 @@ public class TravelPlanView extends VerticalLayout {
         add(saveButtonRow);
     }
 
-    // Przykładowe metody – docelowo będą dane z backendu / service
-    private List<FlightOfferDTO> getSelectedFlight() {
-        return List.of(new FlightOfferDTO("Wizir",
-                LocalDateTime.of(2025, 8, 1, 8, 0),
-                "Warsaw",
-                LocalDateTime.of(2025, 8, 1, 10, 0),
-                "London",
-                "123 zeta"));
-    }
-
-    private List<HotelOfferDTO> getSelectedHotel() {
-        return List.of(new HotelOfferDTO("Hilton", "London",
-                LocalDate.of(2025, 1, 1),
-                LocalDate.of(2025, 1, 5),
-                2, "500 zeta"));
-    }
-
-    private List<TravelerDTO> getTravelers() {
-        return List.of(
-                new TravelerDTO("John",
-                        "Doe",
-                        "Male",
-                        "Adult",
-                        "20kg"),
-                new TravelerDTO("Jane",
-                        "Doe",
-                        "Female",
-                        "Child",
-                        "10kg")
-        );
-    }
 }
 

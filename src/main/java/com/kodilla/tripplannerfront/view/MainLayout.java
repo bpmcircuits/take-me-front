@@ -3,6 +3,7 @@ package com.kodilla.tripplannerfront.view;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -41,10 +42,15 @@ public class MainLayout extends AppLayout implements RouterLayout {
         Image logo = new Image("images/TakeMeLogo.png", "Logo");
         logo.setHeight("80px");
 
+        ComboBox<String> currencyBox = new ComboBox<>();
+        currencyBox.setLabel("Currency");
+        currencyBox.setItems("USD", "EUR", "PLN");
+        currencyBox.setValue("USD");
+
         loginButton.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate("login")));
         signupButton.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate("signup")));
 
-        HorizontalLayout topRight = new HorizontalLayout(loginButton, signupButton);
+        HorizontalLayout topRight = new HorizontalLayout(currencyBox, loginButton, signupButton);
         topRight.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
         topRight.setWidthFull();
 
@@ -73,7 +79,7 @@ public class MainLayout extends AppLayout implements RouterLayout {
     private SideNav getSideNav() {
         SideNav nav = new SideNav();
         SideNavItem tripPlanning = new SideNavItem("Plan",
-                FlightSearchView.class, VaadinIcon.CALENDAR.create());
+                SearchView.class, VaadinIcon.CALENDAR.create());
         SideNavItem yourTrips = new SideNavItem("Your trips", SavedTripsView.class,
                 VaadinIcon.LOCATION_ARROW_CIRCLE.create());
         SideNavItem travelers = new SideNavItem("Travelers",

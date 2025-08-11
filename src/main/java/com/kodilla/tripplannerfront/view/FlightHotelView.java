@@ -2,41 +2,51 @@ package com.kodilla.tripplannerfront.view;
 
 import com.kodilla.tripplannerfront.dto.FlightOfferDTO;
 import com.kodilla.tripplannerfront.dto.HotelOfferDTO;
+import com.kodilla.tripplannerfront.dto.SearchRequestDTO;
+import com.kodilla.tripplannerfront.mapper.FlightMapper;
+import com.kodilla.tripplannerfront.mapper.HotelMapper;
 import com.kodilla.tripplannerfront.service.FlightOfferService;
-import com.kodilla.tripplannerfront.service.HotelService;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.combobox.ComboBox;
+import com.kodilla.tripplannerfront.service.HotelOfferService;
+import com.kodilla.tripplannerfront.session.SearchCriteriaHolder;
+import com.kodilla.tripplannerfront.tripplanerback.dto.hotels.BookingHotelsResponseDTO;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import java.util.List;
+
 @Route(value = "results", layout = MainLayout.class)
 @PageTitle("Flight and Hotel Offers")
-public class FlightHotelView extends VerticalLayout {
+public class FlightHotelView extends VerticalLayout  {
 
     private final Grid<FlightOfferDTO> flightGrid = new Grid<>(FlightOfferDTO.class, false);
     private final Grid<HotelOfferDTO> hotelGrid = new Grid<>(HotelOfferDTO.class, false);
     private final Tabs tabs;
     private final Div content;
 
-    private FlightOfferService flightOfferService = FlightOfferService.getInstance();
-    private HotelService hotelService = HotelService.getInstance();
+    private final FlightOfferService flightService;
+    private final FlightMapper flightMapper;
+    private final HotelOfferService hotelService;
+    private final HotelMapper hotelMapper;
 
-    public FlightHotelView() {
+    public FlightHotelView(SearchCriteriaHolder holder,
+                           FlightOfferService flightService,
+                           FlightMapper flightMapper,
+                           HotelOfferService hotelService,
+                           HotelMapper hotelMapper) {
+        this.flightService = flightService;
+        this.flightMapper = flightMapper;
+        this.hotelService = hotelService;
+        this.hotelMapper = hotelMapper;
+
         Tab flightsTab = new Tab("Flights");
         Tab hotelsTab = new Tab("Hotels");
         tabs = new Tabs(flightsTab, hotelsTab);
         tabs.setSelectedTab(flightsTab);
-
-        ComboBox<String> currencyBox = new ComboBox<>();
-        currencyBox.setLabel("Currency");
-        currencyBox.setItems("USD", "EUR", "PLN");
-        currencyBox.setValue("USD");
 
         flightGrid.addColumn(FlightOfferDTO::airline).setHeader("Airline");
         flightGrid.addColumn(FlightOfferDTO::departureTime).setHeader("Departure Time");
@@ -45,45 +55,34 @@ public class FlightHotelView extends VerticalLayout {
         flightGrid.addColumn(FlightOfferDTO::to).setHeader("To");
         flightGrid.addColumn(FlightOfferDTO::cost).setHeader("Cost");
 
-        hotelGrid.addColumn(HotelOfferDTO::name).setHeader("Hotel");
+        hotelGrid.addColumn(HotelOfferDTO::name).setHeader("Hotel Name");
         hotelGrid.addColumn(HotelOfferDTO::location).setHeader("Location");
-        hotelGrid.addColumn(HotelOfferDTO::price).setHeader("Cost");
+        hotelGrid.addColumn(HotelOfferDTO::startDate).setHeader("Start Date");
+        hotelGrid.addColumn(HotelOfferDTO::endDate).setHeader("End Date");
+        hotelGrid.addColumn(HotelOfferDTO::price).setHeader("Price");
+        hotelGrid.addColumn(HotelOfferDTO::reviewScore).setHeader("Review Score");
+        hotelGrid.addColumn(HotelOfferDTO::reviewScoreWord).setHeader("Review Score Word");
 
         content = new Div(flightGrid);
         content.setWidthFull();
 
-        Button backButton = new Button("Back to search");
-        Button alertsButton = new Button("Get Price Alerts");
+        SearchRequestDTO dto = holder.getLastSearch();
+        if (dto != null) {
+            List<FlightOfferDTO> flightOfferDTO
+                    = flightMapper.mapFromResponseToFlightOfferDTOs(flightService.getFlightOffers(dto));
+            flightGrid.setItems(flightOfferDTO);
 
-        HorizontalLayout bottomBar = new HorizontalLayout(backButton, new Spacer(), currencyBox, alertsButton);
-        bottomBar.setWidthFull();
+            List<BookingHotelsResponseDTO> response = hotelService.getHotelOffers(hotelMapper.mapToHotelSearchDTO(dto));
+            List<HotelOfferDTO> hotelOfferDTOs = hotelMapper.mapToHotelOfferDTOList(response);
+            hotelGrid.setItems(hotelOfferDTOs);
+        }
 
-        tabs.addSelectedChangeListener(event -> {
+        tabs.addSelectedChangeListener(e -> {
             content.removeAll();
-            if (event.getSelectedTab() == flightsTab) {
-                content.add(flightGrid);
-            } else {
-                content.add(hotelGrid);
-            }
+            content.add(e.getSelectedTab().getLabel().equals("Flights") ? flightGrid : hotelGrid);
         });
 
-        add(content, bottomBar);
+        add(tabs, content);
         setSizeFull();
-        refreshFlightGrid();
-        refreshHotelGrid();
-    }
-
-    private static class Spacer extends Div {
-        public Spacer() {
-            setWidthFull();
-        }
-    }
-
-    private void refreshFlightGrid() {
-        flightGrid.setItems(flightOfferService.getAllOffers());
-    }
-
-    private void refreshHotelGrid() {
-        hotelGrid.setItems(hotelService.getAllOffers());
     }
 }
